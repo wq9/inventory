@@ -7,14 +7,10 @@
 $db_host = 'localhost';
 $db_name = 'inventory';
 $db_user_name = 'root';
-$db_password = 'lySin@mANa84';
+$db_password = 'root';
 $prefix = '';
-$url = 'http://localhost/~jackey/inventory';
+$url = 'http://localhost/inventory';
 $language = 'english.php';
 $company = 'SysUnion Inc.';
-$warehouse = array(
-    '1' => 'OFFICE',
-    '2' => 'Jackey'
-        )
 ?>
 			
