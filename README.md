@@ -1,4 +1,4 @@
 # Inventory
-Track Warehouse Inventory
-Manage Users
-Manage Products
+- Track Warehouse Inventory
+- Manage Users
+- Manage Products
