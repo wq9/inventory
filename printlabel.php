@@ -31,6 +31,4 @@ if(isset($_GET['barcode'])){ $barcode = $_GET['barcode'];}
         -->
 
     </body>
-</html> 
-
-
+</html>

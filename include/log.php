@@ -13,14 +13,14 @@ function add_log($user_id, $product_id, $serial, $type, $text) {
     $text = safety_filter($text);
     $date = date("Y-m-d H:i:s");
 
-    mysql_query("INSERT INTO $database->log 
+    mysqli_query($database->db, "INSERT INTO $database->log 
 	(date, user_id, product_id, serial, type, text)
 	VALUES
 	('$date', '$user_id', '$product_id', '$serial',  '$type', '$text')");
-    if (mysql_affected_rows() > 0) {
+    if (mysqli_affected_rows($database->db) > 0) {
         return true;
     } else {
-        echo mysql_error();
+        echo mysqli_error($database->db);
         return false;
     }
 }

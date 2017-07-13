@@ -13,14 +13,14 @@ function add_meta($ref_id, $title, $meta_key, $meta_value) {
     $key = safety_filter($meta_key);
     $value = safety_filter($meta_value);
 
-    mysql_query("INSERT INTO $database->meta
+    mysqli_query($database->db, "INSERT INTO $database->meta
 		(ref_id, title, meta_key, meta_value)
 		VALUES
 		('$ref_id', '$title', '$meta_key', '$meta_value')");
-    if (mysql_affected_rows() > 0) {
+    if (mysqli_affected_rows($database->db) > 0) {
         return true;
     } else {
-        echo mysql_error();
+        echo mysqli_error($database->db);
         return false;
     }
 }
@@ -29,22 +29,22 @@ function add_meta($ref_id, $title, $meta_key, $meta_value) {
 
 function update_meta($id, $ref_id, $title, $meta_key, $meta_value) {
     global $database;
-    $id = trim(mysql_real_escape_string(strip_tags($id)));
-    $ref_id = trim(mysql_real_escape_string(strip_tags($ref_id)));
-    $title = trim(mysql_real_escape_string(strip_tags($title)));
-    $meta_key = trim(mysql_real_escape_string(strip_tags($meta_key)));
-    $meta_value = trim(mysql_real_escape_string(strip_tags($meta_value)));
+    $id = trim(mysqli_real_escape_string($database->db, strip_tags($id)));
+    $ref_id = trim(mysqli_real_escape_string($database->db, strip_tags($ref_id)));
+    $title = trim(mysqli_real_escape_string($database->db, strip_tags($title)));
+    $meta_key = trim(mysqli_real_escape_string($database->db, strip_tags($meta_key)));
+    $meta_value = trim(mysqli_real_escape_string($database->db, strip_tags($meta_value)));
 
     if ($id == '') {
-        if (mysql_num_rows(mysql_query("SELECT * FROM $database->meta WHERE ref_id='$ref_id' AND title='$title' AND meta_key='$meta_key'")) > 0) {
-            $update = mysql_query("UPDATE $database->meta SET
+        if (mysqli_num_rows(mysqli_query($database->db, "SELECT * FROM $database->meta WHERE ref_id='$ref_id' AND title='$title' AND meta_key='$meta_key'")) > 0) {
+            $update = mysqli_query($database->db, "UPDATE $database->meta SET
 					ref_id='$ref_id',
 					title='$title',
 					meta_key='$meta_key',
 					meta_value='$meta_value'
 					WHERE
 					ref_id='$ref_id' AND title='$title' AND meta_key='$meta_key'");
-            if (mysql_affected_rows() > 0) {
+            if (mysqli_affected_rows($database->db) > 0) {
                 return true;
             } else {
                 if ($update) {
@@ -57,13 +57,13 @@ function update_meta($id, $ref_id, $title, $meta_key, $meta_value) {
             return add_meta($ref_id, $title, $meta_key, $meta_value);
         }
     } else {
-        $update = mysql_query("UPDATE $database->meta SET
+        $update = mysqli_query($database->db, "UPDATE $database->meta SET
 				ref_id='$ref_id',
 				title='$title',
 				meta_key='$meta_key',
 				meta_value='$meta_value'
 				WHERE id='$id'");
-        if (mysql_affected_rows() > 0) {
+        if (mysqli_affected_rows($database->db) > 0) {
             return true;
         } else {
             if ($update) {
@@ -79,20 +79,20 @@ function update_meta($id, $ref_id, $title, $meta_key, $meta_value) {
 
 function delete_meta($id, $title, $meta_key) {
     global $database;
-    $id = trim(mysql_real_escape_string(strip_tags($id)));
-    $title = trim(mysql_real_escape_string(strip_tags($title)));
-    $meta_key = trim(mysql_real_escape_string(strip_tags($meta_key)));
+    $id = trim(mysqli_real_escape_string($database->db, strip_tags($id)));
+    $title = trim(mysqli_real_escape_string($database->db, strip_tags($title)));
+    $meta_key = trim(mysqli_real_escape_string($database->db, strip_tags($meta_key)));
 
     if ($id == '') {
-        mysql_query("DELETE FROM $database->meta WHERE title='$title' AND meta_key='$meta_key'");
-        if (mysql_affected_rows() > 0) {
+        mysqli_query($database->db, "DELETE FROM $database->meta WHERE title='$title' AND meta_key='$meta_key'");
+        if (mysqli_affected_rows($database->db) > 0) {
             return true;
         } else {
             return false;
         }
     } else {
-        mysql_query("DELETE FROM $database->meta WHERE id='$id'");
-        if (mysql_affected_rows() > 0) {
+        mysqli_query($database->db, "DELETE FROM $database->meta WHERE id='$id'");
+        if (mysqli_affected_rows($database->db) > 0) {
             return true;
         } else {
             return false;
@@ -111,11 +111,11 @@ function get_meta($id, $ref_id, $title, $meta_key) {
     $meta['meta_value'] = '';
 
     if ($id == '') {
-        $query = mysql_query("SELECT * FROM $database->meta WHERE ref_id='$ref_id' AND title='$title' AND meta_key='$meta_key'");
+        $query = mysqli_query($database->db, "SELECT * FROM $database->meta WHERE ref_id='$ref_id' AND title='$title' AND meta_key='$meta_key'");
     } else {
-        $query = mysql_query("SELECT * FROM $database->meta WHERE id='$id'");
+        $query = mysqli_query($database->db, "SELECT * FROM $database->meta WHERE id='$id'");
     }
-    while ($list = mysql_fetch_assoc($query)) {
+    while ($list = mysqli_fetch_assoc($query)) {
         $meta['meta_value'] = $list['meta_value'];
     }
 

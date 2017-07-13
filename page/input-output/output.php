@@ -25,15 +25,15 @@ if (isset($_POST['btn_submit'])) {
     $amount = safety_filter($_POST['amount']);
 
     if ($product_id == '') {
-        $query_product = mysql_query("SELECT * FROM $database->products WHERE status='publish' AND code='$product_code'");
-        while ($list_product = mysql_fetch_assoc($query_product)) {
+        $query_product = mysqli_query($database->db, "SELECT * FROM $database->products WHERE status='publish' AND code='$product_code'");
+        while ($list_product = mysqli_fetch_assoc($query_product)) {
             $product_id = $list_product['id'];
         }
     }
 
     if ($product_id == '') {
-        $query_product = mysql_query("SELECT * FROM $database->product_item WHERE serial='$serial' AND status='in'");
-        while ($list_product = mysql_fetch_assoc($query_product)) {
+        $query_product = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE serial='$serial' AND status='in'");
+        while ($list_product = mysqli_fetch_assoc($query_product)) {
             $product_id = $list_product['id'];
         }
     }

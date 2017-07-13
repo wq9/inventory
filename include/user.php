@@ -1,8 +1,8 @@
 <?php
 
 if (@$_SESSION["management_login"] == true) {
-    $x_query_user = mysql_query("SELECT * FROM $database->users WHERE id='" . $_SESSION['user_id'] . "'");
-    while ($x_list_user = mysql_fetch_assoc($x_query_user)) {
+    $x_query_user = mysqli_query($database->db, "SELECT * FROM $database->users WHERE id='" . $_SESSION['user_id'] . "'");
+    while ($x_list_user = mysqli_fetch_assoc($x_query_user)) {
         $user['id'] = $x_list_user['id'];
         $user['status'] = $x_list_user['status'];
         $user['user_name'] = $x_list_user['user_name'];
@@ -95,7 +95,7 @@ function add_user($user_name, $password, $password_again, $email, $phone, $fax, 
         }
     }
     //if(isValidEmail($email)) { $continue = false;     alert_box('alert', get_lang('Please input a correct email address');}
-    if (mysql_num_rows(mysql_query("SELECT * FROM $database->users WHERE user_name='$user_name'")) > 0) {
+    if (mysqli_num_rows(mysqli_query($database->db, "SELECT * FROM $database->users WHERE user_name='$user_name'")) > 0) {
         $continue = false;
         alert_box('alert', get_lang('User name database found'));
     }
@@ -103,13 +103,13 @@ function add_user($user_name, $password, $password_again, $email, $phone, $fax, 
     $password = md5($password);
 
     if ($continue == true) {
-        mysql_query("INSERT INTO $database->users 
+        mysqli_query($database->db, "INSERT INTO $database->users 
 		(status, user_name, password, email, phone, fax, mobile, level)
 		VALUES
 		('publish', '$user_name', '$password', '$email', '$phone', '$fax', '$mobile', '$level')
 		");
-        if (mysql_affected_rows() > 0) {
-            return mysql_insert_id();
+        if (mysqli_affected_rows($database->db) > 0) {
+            return mysqli_insert_id($database->db);
         } else {
             return false;
         }
@@ -179,7 +179,7 @@ function update_user($user_id, $status, $user_name, $password, $email, $phone, $
     }
 
     if ($continue == true) {
-        mysql_query("UPDATE $database->users SET
+        mysqli_query($database->db, "UPDATE $database->users SET
 		status='$status',
 		user_name='$user_name',
 		password='$password',
@@ -191,7 +191,7 @@ function update_user($user_id, $status, $user_name, $password, $email, $phone, $
 		WHERE
 		id='$user_id'
 		");
-        if (mysql_affected_rows() > 0) {
+        if (mysqli_affected_rows($database->db) > 0) {
             return true;
         } else {
             return false;
@@ -232,7 +232,7 @@ function update_user_profile($user_id, $email, $phone, $fax, $mobile) {
     }
 
     if ($continue == true) {
-        mysql_query("UPDATE $database->users SET
+        mysqli_query($database->db, "UPDATE $database->users SET
                 email='$email',
                 phone='$phone',
                 fax='$fax',
@@ -240,7 +240,7 @@ function update_user_profile($user_id, $email, $phone, $fax, $mobile) {
                 WHERE
                 id='$user_id'
                 ");
-        if (mysql_affected_rows() > 0) {
+        if (mysqli_affected_rows($database->db) > 0) {
             return true;
         } else {
             return false;
@@ -256,8 +256,8 @@ function delete_user($user_id) {
     global $database;
     $user_id = safety_filter($user_id);
 
-    mysql_query("UPDATE $database->users SET status='delete' WHERE id='$user_id'");
-    if (mysql_affected_rows() > 0) {
+    mysqli_query($database->db, "UPDATE $database->users SET status='delete' WHERE id='$user_id'");
+    if (mysqli_affected_rows($database->db) > 0) {
         return true;
     }
 }
@@ -272,8 +272,8 @@ if (isset($_GET['user_id']) or isset($_POST['user_id'])) {
         $user_id = safety_filter($_POST['user_id']);
     }
 
-    $query_users = mysql_query("SELECT * FROM $database->users WHERE id='$user_id'");
-    while ($list_users = mysql_fetch_assoc($query_users)) {
+    $query_users = mysqli_query($database->db, "SELECT * FROM $database->users WHERE id='$user_id'");
+    while ($list_users = mysqli_fetch_assoc($query_users)) {
         $users['id'] = $list_users['id'];
         $users['status'] = $list_users['status'];
         $users['user_name'] = $list_users['user_name'];
@@ -303,8 +303,8 @@ if (isset($_GET['user_id']) or isset($_POST['user_id'])) {
 
 function get_user($user_id, $value) {
     global $database;
-    $query_users = mysql_query("SELECT * FROM $database->users WHERE id='$user_id'");
-    while ($list_users = mysql_fetch_assoc($query_users)) {
+    $query_users = mysqli_query($database->db, "SELECT * FROM $database->users WHERE id='$user_id'");
+    while ($list_users = mysqli_fetch_assoc($query_users)) {
         $users['id'] = $list_users['id'];
         $users['status'] = $list_users['status'];
         $users['user_name'] = $list_users['user_name'];

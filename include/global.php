@@ -7,18 +7,19 @@ class database {
 
     public $prefix; // herkese açık değer
 
-    function database($prefix) {
+    function database($prefix, $db) {
         $this->users = $prefix . 'users';
         $this->meta = $prefix . 'meta';
         $this->products = $prefix . 'product';
         $this->product_item = $prefix . 'product_item';
         $this->product_amount = $prefix . 'product_amount';
         $this->log = $prefix . 'log';
+        $this->db = $db;
     }
 
 }
 
-$database = new database($prefix);
+$database = new database($prefix, $db_connect);
 
 
 /* ----------------------------------------------
@@ -70,7 +71,8 @@ function alert_box($type, $message) {
 /* ----- SAFETY FILTER ----- */
 
 function safety_filter($value) {
-    return trim(mysql_real_escape_string(strip_tags($value)));
+    global $database;
+    return trim(mysqli_real_escape_string($database->db, strip_tags($value)));
 }
 
 /* ----------------------------------------------

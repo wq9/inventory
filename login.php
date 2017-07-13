@@ -60,9 +60,10 @@ include_once('include/language.php');
                     $user_name = safety_filter($_POST['user_name']);
                     $password = md5(safety_filter($_POST['password']));
 
-                    $query_user = mysql_query("SELECT * FROM $database->users WHERE user_name='$user_name' AND password='$password' AND status='publish'");
-                    if (mysql_num_rows($query_user) > 0) {
-                        while ($list_user = mysql_fetch_assoc($query_user)) {
+                    $sql = "SELECT * FROM {$database->users} WHERE user_name='$user_name' AND password='$password' AND status='publish'";
+                    $query_user = mysqli_query($database->db, $sql);
+                    if (mysqli_num_rows($query_user) > 0) {
+                        while ($list_user = mysqli_fetch_assoc($query_user)) {
                             $user_id = $list_user['id'];
                         }
                         $management_login = true;
@@ -88,10 +89,10 @@ include_once('include/language.php');
                         <legend><?php lang('Login'); ?></legend>
 
                         <label for="user_name"><?php lang('Login Name'); ?>: admin</label>
-                        <input type="text" name="user_name" id="user_name" class="required" minlength="3" maxlength="20" value="" />
+                        <input type="text" name="user_name" id="user_name" class="required" minlength="3" maxlength="20" value="<?php echo $_POST['user_name'];?>" />
 
                         <label for="password"><?php lang('Password'); ?>: 123456</label>
-                        <input type="password" name="password" id="password" class="required"  minlength="3" maxlength="20" value="" />          
+                        <input type="password" name="password" id="password" class="required"  minlength="3" maxlength="20" value="<?php echo $_POST['password'];?>" />          
 
                         <input type="submit" name="btn_submit" id="btn_submit" class="button" value="<?php lang('Login'); ?>" />
 

@@ -21,13 +21,13 @@ function add_product($code, $name, $description, $instruction, $purchase_price, 
         alert_box('alert', get_lang('Price not available'));
         return false;
     }
-    mysql_query("INSERT INTO product 
+    mysqli_query($database->db, "INSERT INTO product 
 	(status, code, name, description, instruction, purchase_price, sale_price)
 	VALUES
 	('publish', '$code', '$name', '$description', '$instruction', '$purchase_price', '$sale_price')
 	");
-    if (mysql_affected_rows() > 0) {
-        $product_id = mysql_insert_id();
+    if (mysqli_affected_rows($database->db) > 0) {
+        $product_id = mysqli_insert_id($database->db);
         add_log(get_the_current_user('id'), $product_id, '', 'input', 'PRODUCT-IN');
         return $product_id;
     } else {
@@ -59,7 +59,7 @@ function update_product($id, $status, $code, $name, $description, $instruction, 
         return false;
     }
 
-    $update = mysql_query("UPDATE $database->products SET
+    $update = mysqli_query($database->db, "UPDATE $database->products SET
 	status='$status', 
 	code='$code', 
 	name='$name',
@@ -70,7 +70,7 @@ function update_product($id, $status, $code, $name, $description, $instruction, 
 	WHERE
 	id='$id'
 	");
-    if (mysql_affected_rows() > 0) {
+    if (mysqli_affected_rows($database->db) > 0) {
         add_log(get_the_current_user('id'), $id, '', 'update', "UPDATE $database->products SET
         	status='$status', 
         	code='$code', 
@@ -87,7 +87,7 @@ function update_product($id, $status, $code, $name, $description, $instruction, 
         if ($update == true) {
             return true;
         } else {
-            echo mysql_error();
+            echo mysqli_error($database->db);
             return false;
         }
     }
@@ -101,7 +101,7 @@ function update_product_item($id, $status, $serial, $expire_date, $shelf) {
     $expire_date = safety_filter($expire_date);
     $shelf = safety_filter($shelf);
 
-    $update = mysql_query("UPDATE $database->product_item SET
+    $update = mysqli_query($database->db, "UPDATE $database->product_item SET
         status='$status', 
         serial='$serial', 
         expire_date='$expire_date',
@@ -109,7 +109,7 @@ function update_product_item($id, $status, $serial, $expire_date, $shelf) {
         WHERE
         id='$id'
         ");
-    if (mysql_affected_rows() > 0) {
+    if (mysqli_affected_rows($database->db) > 0) {
         add_log(get_the_current_user('id'), '', $serial, 'update', "UPDATE $database->product_item SET
         	status='$status', 
         	serial='$serial', 
@@ -123,7 +123,7 @@ function update_product_item($id, $status, $serial, $expire_date, $shelf) {
         if ($update == true) {
             return true;
         } else {
-            echo mysql_error();
+            echo mysqli_error($database->db);
             return false;
         }
     }
@@ -139,8 +139,8 @@ if (isset($_GET['product_id']) or isset($_POST['product_id'])) {
         $product_id = safety_filter($_POST['product_id']);
     }
 
-    $query_product = mysql_query("SELECT * FROM $database->products WHERE id='$product_id'");
-    while ($list_product = mysql_fetch_assoc($query_product)) {
+    $query_product = mysqli_query($database->db, "SELECT * FROM $database->products WHERE id='$product_id'");
+    while ($list_product = mysqli_fetch_assoc($query_product)) {
         $product['id'] = $list_product['id'];
         $product['status'] = $list_product['status'];
         $product['code'] = $list_product['code'];
@@ -172,8 +172,8 @@ if (isset($_GET['item_id']) or isset($_POST['item_id'])) {
         $item_id = safety_filter($_POST['item_id']);
     }
 
-    $query_item = mysql_query("SELECT * FROM $database->product_item WHERE id='$item_id'");
-    while ($list_item = mysql_fetch_assoc($query_item)) {
+    $query_item = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE id='$item_id'");
+    while ($list_item = mysqli_fetch_assoc($query_item)) {
         $item['id'] = $list_item['id'];
         $item['product_id'] = $list_item['product_id'];
         $item['serial'] = $list_item['serial'];
@@ -200,8 +200,8 @@ if (isset($_GET['item_id']) or isset($_POST['item_id'])) {
 
 function get_product($product_id, $value) {
     global $database;
-    $query_product = mysql_query("SELECT * FROM $database->products WHERE id='$product_id'");
-    while ($list_product = mysql_fetch_assoc($query_product)) {
+    $query_product = mysqli_query($database->db, "SELECT * FROM $database->products WHERE id='$product_id'");
+    while ($list_product = mysqli_fetch_assoc($query_product)) {
         $product['id'] = $list_product['id'];
         $product['status'] = $list_product['status'];
         $product['code'] = $list_product['code'];
@@ -217,8 +217,8 @@ function get_product($product_id, $value) {
 
 function get_product_item($item_id, $value) {
     global $database;
-    $query_item = mysql_query("SELECT * FROM $database->item WHERE id='$item_id'");
-    while ($list_item = mysql_fetch_assoc($query_item)) {
+    $query_item = mysqli_query($database->db, "SELECT * FROM $database->item WHERE id='$item_id'");
+    while ($list_item = mysqli_fetch_assoc($query_item)) {
         $item['id'] = $list_item['id'];
         $item['product_id'] = $list_item['product_id'];
         $item['serial'] = $list_item['serial'];
@@ -262,8 +262,8 @@ function box_product_list($product_id, $product_code) {
     <tbody>
 	';
 
-    $query_products = mysql_query("SELECT * FROM $database->products WHERE status='publish'");
-    while ($list_products = mysql_fetch_assoc($query_products)) {
+    $query_products = mysqli_query($database->db, "SELECT * FROM $database->products WHERE status='publish'");
+    while ($list_products = mysqli_fetch_assoc($query_products)) {
         $products['id'] = $list_products['id'];
         $products['status'] = $list_products['status'];
         $products['code'] = $list_products['code'];
@@ -316,15 +316,15 @@ function product_amount($input_output, $product_id, $serial, $expire_date, $shel
     $amount = safety_filter($amount);
 
     if ($input_output == 'input') {
-        $query_amount = mysql_query("SELECT * FROM $database->product_item WHERE product_id='$product_id' AND serial='$serial'");
-        if (mysql_num_rows($query_amount) > 0) {
+        $query_amount = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE product_id='$product_id' AND serial='$serial'");
+        if (mysqli_num_rows($query_amount) > 0) {
             alert_box('alert', get_lang('Product item exists'));
             return false;
         } else {
-            mysql_query("INSERT INTO $database->product_item (product_id, serial, expire_date, shelf, status) VALUES ('$product_id', '$serial', '$expire_date', '$shelf', 'in')");
-            if (mysql_affected_rows() > 0) {
-                $query_item = mysql_query("SELECT * FROM $database->product_item WHERE serial='$serial'");
-                while ($list_products = mysql_fetch_assoc($query_item)) {
+            mysqli_query($database->db, "INSERT INTO $database->product_item (product_id, serial, expire_date, shelf, status) VALUES ('$product_id', '$serial', '$expire_date', '$shelf', 'in')");
+            if (mysqli_affected_rows($database->db) > 0) {
+                $query_item = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE serial='$serial'");
+                while ($list_products = mysqli_fetch_assoc($query_item)) {
                     add_log(get_the_current_user('id'), $list_products['id'], $serial, $input_output, "ITEM-IN");
                 }
                 return true;
@@ -333,22 +333,22 @@ function product_amount($input_output, $product_id, $serial, $expire_date, $shel
             }
         }
     } else if ($input_output == 'output') {
-        $query_amount = mysql_query("SELECT * FROM $database->product_item WHERE serial='$serial'");
-        if (mysql_num_rows($query_amount) > 0) {
-            $item_query = mysql_query("SELECT * FROM $database->product_item WHERE serial='$serial' AND status = 'out'");
-            if (mysql_num_rows($item_query) > 0) {
+        $query_amount = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE serial='$serial'");
+        if (mysqli_num_rows($query_amount) > 0) {
+            $item_query = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE serial='$serial' AND status = 'out'");
+            if (mysqli_num_rows($item_query) > 0) {
                 alert_box('alert', get_lang('Product item has removed already'));
                 return false;
             }
-            $item_query = mysql_query("SELECT * FROM $database->product_item WHERE serial='$serial' AND status = 'in' AND expire_date !='0000-00-00' AND expire_date < current_date()");
-            if (mysql_num_rows($item_query) > 0) {
+            $item_query = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE serial='$serial' AND status = 'in' AND expire_date !='0000-00-00' AND expire_date < current_date()");
+            if (mysqli_num_rows($item_query) > 0) {
                 add_log(get_the_current_user('id'), $product_id, $serial, $input_output, "EXPIRED");
                 alert_box('alert', get_lang('Product item was expired'));
-                mysql_query("UPDATE $database->product_item SET status='out' WHERE serial='$serial'");
+                mysqli_query($database->db, "UPDATE $database->product_item SET status='out' WHERE serial='$serial'");
                 return false;
             }
-            mysql_query("UPDATE $database->product_item SET status='out' WHERE serial='$serial'");
-            if (mysql_affected_rows() > 0) {
+            mysqli_query($database->db, "UPDATE $database->product_item SET status='out' WHERE serial='$serial'");
+            if (mysqli_affected_rows($database->db) > 0) {
                 add_log(get_the_current_user('id'), $product_id, $serial, $input_output, "ITEM-OUT");
                 return true;
             } else {
@@ -370,8 +370,8 @@ function get_calc_amount($product_id) {
     global $database;
 
     $amount = 0;
-    $query_product_amount = mysql_query("SELECT * FROM $database->product_item WHERE product_id='$product_id' AND status='in'");
-    while ($list_product_amount = mysql_fetch_assoc($query_product_amount)) {
+    $query_product_amount = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE product_id='$product_id' AND status='in'");
+    while ($list_product_amount = mysqli_fetch_assoc($query_product_amount)) {
         $amount = $amount + 1;
     }
 

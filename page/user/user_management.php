@@ -91,8 +91,8 @@
             </thead>
             <tbody>
                 <?php
-                $query_users = mysql_query("SELECT * FROM $database->users WHERE status='publish' ORDER BY id ASC");
-                while ($list_users = mysql_fetch_assoc($query_users)) {
+                $query_users = mysqli_query($database->db, "SELECT * FROM $database->users WHERE status='publish' ORDER BY id ASC");
+                while ($list_users = mysqli_fetch_assoc($query_users)) {
                     echo '
 				<tr>
 					<td></td>

@@ -23,8 +23,8 @@ if (isset($_GET['product_id'])) {
     </thead>
     <tbody>
         <?php
-        $query_log = mysql_query("SELECT * FROM $database->log WHERE product_id='$product_id' ORDER BY id DESC");
-        while ($list_log = mysql_fetch_assoc($query_log)) {
+        $query_log = mysqli_query($database->db, "SELECT * FROM $database->log WHERE product_id='$product_id' ORDER BY id DESC");
+        while ($list_log = mysqli_fetch_assoc($query_log)) {
             echo '
 		<tr>
 			<td></td>

@@ -20,11 +20,11 @@ if (isset($_GET['product_id'])) {
         $amount_total = 0;
         if (isset($_GET['the_shelf'])) {
             $shelf = $_GET['the_shelf'];
-            $query_product_amount = mysql_query("SELECT distinct(product_id) FROM $database->product_item WHERE shelf='$shelf'AND status='in'");
-            while ($list_products = mysql_fetch_assoc($query_product_amount)) {
+            $query_product_amount = mysqli_query($database->db, "SELECT distinct(product_id) FROM $database->product_item WHERE shelf='$shelf'AND status='in'");
+            while ($list_products = mysqli_fetch_assoc($query_product_amount)) {
                 $product_id = $list_products['product_id'];
-                $query_items = mysql_query("SELECT * FROM $database->product_item WHERE product_id='$product_id' AND shelf='$shelf' AND status='in'");
-                $amount = mysql_num_rows($query_items);
+                $query_items = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE product_id='$product_id' AND shelf='$shelf' AND status='in'");
+                $amount = mysqli_num_rows($query_items);
                 echo '
 			<tr>
 				<td></td>
@@ -37,11 +37,11 @@ if (isset($_GET['product_id'])) {
             }
         } else if (isset($_GET['product_id'])) {
             $product_id = $_GET['product_id'];
-            $query_product_amount = mysql_query("SELECT distinct(shelf) FROM $database->product_item WHERE product_id='$product_id' AND status='in'");
-            while ($list_products = mysql_fetch_assoc($query_product_amount)) {
+            $query_product_amount = mysqli_query($database->db, "SELECT distinct(shelf) FROM $database->product_item WHERE product_id='$product_id' AND status='in'");
+            while ($list_products = mysqli_fetch_assoc($query_product_amount)) {
                 $shelf = $list_products['shelf'];
-                $query_items = mysql_query("SELECT * FROM $database->product_item WHERE product_id='$product_id' AND shelf='$shelf'AND status='in'");
-                $amount = mysql_num_rows($query_items);
+                $query_items = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE product_id='$product_id' AND shelf='$shelf'AND status='in'");
+                $amount = mysqli_num_rows($query_items);
                 echo '
 		<tr>
 			<td></td>
@@ -53,17 +53,17 @@ if (isset($_GET['product_id'])) {
                 $amount_total = $amount_total + $amount;
             }
         } else {
-            $query_shelf = mysql_query("SELECT distinct(shelf) FROM $database->product_item WHERE status='in'");
-            while ($list_shelfs = mysql_fetch_assoc($query_shelf)) {
+            $query_shelf = mysqli_query($database->db, "SELECT distinct(shelf) FROM $database->product_item WHERE status='in'");
+            while ($list_shelfs = mysqli_fetch_assoc($query_shelf)) {
                 $shelf = $list_shelfs['shelf'];
                 //echo $shelf .'</br>';
-                $query_shelf_product = mysql_query("SELECT distinct(product_id) FROM $database->product_item WHERE shelf='$shelf'AND status='in'");
-                while ($list_products = mysql_fetch_assoc($query_shelf_product)) {
+                $query_shelf_product = mysqli_query($database->db, "SELECT distinct(product_id) FROM $database->product_item WHERE shelf='$shelf'AND status='in'");
+                while ($list_products = mysqli_fetch_assoc($query_shelf_product)) {
 
                     $product_id = $list_products['product_id'];
                     //echo $product_id + ' '.$shelf.'</br>';
-                    $query_items = mysql_query("SELECT * FROM $database->product_item WHERE product_id='$product_id' AND shelf='$shelf'AND status='in'");
-                    $amount = mysql_num_rows($query_items);
+                    $query_items = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE product_id='$product_id' AND shelf='$shelf'AND status='in'");
+                    $amount = mysqli_num_rows($query_items);
                     echo '
 		<tr>
 			<td></td>

@@ -15,8 +15,8 @@
     </thead>
     <tbody>
         <?php
-        $query_products = mysql_query("SELECT * FROM $database->products WHERE status='publish'");
-        while ($list_products = mysql_fetch_assoc($query_products)) {
+        $query_products = mysqli_query($database->db, "SELECT * FROM $database->products WHERE status='publish'");
+        while ($list_products = mysqli_fetch_assoc($query_products)) {
             $products['id'] = $list_products['id'];
             $products['status'] = $list_products['status'];
             $products['code'] = $list_products['code'];

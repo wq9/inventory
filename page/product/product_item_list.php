@@ -16,11 +16,11 @@
         $query_products = '';
         if (isset($_GET['product_id'])) {
             $product_id = $_GET['product_id'];
-            $query_products = mysql_query("SELECT * FROM $database->product_item WHERE product_id='$product_id' AND status='in'");
+            $query_products = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE product_id='$product_id' AND status='in'");
         } else {
-            $query_products = mysql_query("SELECT * FROM $database->product_item WHERE status='in'");
+            $query_products = mysqli_query($database->db, "SELECT * FROM $database->product_item WHERE status='in'");
         }
-        while ($list_products = mysql_fetch_assoc($query_products)) {
+        while ($list_products = mysqli_fetch_assoc($query_products)) {
             $products['id'] = $list_products['id'];
             $products['product_id'] = $list_products['product_id'];
             $products['serial'] = $list_products['serial'];
