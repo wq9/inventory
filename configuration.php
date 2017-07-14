@@ -5,9 +5,9 @@
 $db_host = 'localhost';
 $db_name = 'inventory';
 $db_user_name = 'root';
-$db_password = 'wei@2017';
+$db_password = 'root';
 $prefix = '';
-$url = 'http://localhost:8000';
+$url = 'http://localhost/inventory';
 $language = 'english.php';
 $company = 'SysUnion Inc.';
 ?>
