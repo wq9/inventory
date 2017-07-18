@@ -49,7 +49,7 @@
 
             var script = document.createElement('script');
 
-            script.setAttribute('src', 'http://oscargo.com/inventory/printlabel.php?&callback=window._loadBarcodeDataCallback');
+            script.setAttribute('src', 'printlabel.php?&callback=window._loadBarcodeDataCallback');
             script.setAttribute('id', 'printScript');
             script.setAttribute('type', 'text/javascript');
             document.documentElement.firstChild.appendChild(script);
