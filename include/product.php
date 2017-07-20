@@ -246,7 +246,7 @@ function box_product_list($product_id, $product_code) {
     global $database;
     $array_product = array();
 
-    echo '<div id="box_product_list" class="reveal-modal expand">
+    echo '<div id="box_product_list" class="reveal-modal large">
 	<table class="dataTable">
 	<thead>
     	<tr>

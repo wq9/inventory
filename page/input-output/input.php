@@ -73,6 +73,8 @@ if (isset($_POST['btn_submit'])) {
     });
 </script>
 
+<?php box_product_list('product_id', 'product_code'); ?>
+
 <form name="form_add" id="form_add" action="" method="POST">
     <div class="row">
         <div class="ten columns">
@@ -82,7 +84,6 @@ if (isset($_POST['btn_submit'])) {
                 <div class="row">
                     <?php if ($input_output == 'input') { ?>
                         <div class="ten columns">
-                            <?php box_product_list('product_id', 'product_code'); ?>
                             <a href="#" class="button secondary small " data-reveal-id="box_product_list" data-animation="fadeAndPop" ><?php lang('Product List'); ?></a>
                         </div>
                         <div class="ten columns">
