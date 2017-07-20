@@ -1,4 +1,4 @@
-<?
+<?php
 if(isset($_GET['productdesc'])){ $productdesc = $_GET['productdesc'];}
 if(isset($_GET['barcode'])){ $barcode = $_GET['barcode'];}
 ?>
